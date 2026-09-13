@@ -7,7 +7,7 @@ if(tg){tg.ready();tg.expand();try{tg.setHeaderColor("#f4f5f7");tg.setBackgroundC
   Example: https://api.example.com
   Do NOT put the Telegram bot token here.
 */
-const API_BASE_URL = "";
+const API_BASE_URL = "https://expenditure-pair-pam-inclusive.trycloudflare.com";
 
 const state={
   day:1,streak:1,score:0,trades:0,wins:0,losses:0,goalDone:false,

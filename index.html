@@ -1,84 +1,143 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>EdiBalance</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="app">
+  <main id="app">
     <header class="topbar">
       <div>
         <div class="eyebrow">EDIBALANCE</div>
-        <h1>Твой путь</h1>
+        <h1 id="pageTitle">Твой путь</h1>
       </div>
-      <button class="icon-btn" aria-label="Профиль">👤</button>
+      <button class="icon-btn" data-page="profile" aria-label="Профиль">👤</button>
     </header>
 
-    <main>
-      <section class="hero glass">
-        <div class="hero-row">
-          <div>
-            <span class="muted">EDI365</span>
-            <div class="day">День <b id="day">1</b><span>/365</span></div>
-          </div>
-          <div class="ring"><span id="progress">0%</span></div>
+    <section class="screen active" id="home">
+      <div class="hero-card">
+        <div>
+          <div class="muted">EDI365</div>
+          <div class="day"><span id="dayNumber">1</span><small>/365</small></div>
+          <div class="progress"><i id="mainProgress"></i></div>
+          <div class="split"><span>Серия <b id="streak">1</b> 🔥</span><span>Score <b id="score">0%</b></span></div>
         </div>
-        <div class="progress"><i id="progressBar"></i></div>
-        <div class="hero-meta">
-          <span>Серия <b id="streak">0</b> 🔥</span>
-          <span>Score <b id="score">0</b>%</span>
-        </div>
-      </section>
+        <div class="ring"><span id="ringValue">0%</span></div>
+      </div>
 
-      <section class="section">
-        <div class="section-head">
-          <h2>Сегодня</h2><span class="pill">День <span id="todayDay">1</span></span>
-        </div>
-        <div class="card">
-          <div class="card-icon">🎯</div>
-          <div class="card-content">
-            <h3>Цель дня</h3>
-            <p>Сделать сегодняшнее решение осознанно, а не на автомате.</p>
-          </div>
-          <button class="arrow" id="goalBtn">›</button>
-        </div>
-      </section>
+      <div class="section-head"><h2>Сегодня</h2><span class="pill">День <span id="todayDay">1</span></span></div>
+      <button class="wide-card action-card" data-page="edi365">
+        <div class="emoji">🎯</div><div><h3>Цель дня</h3><p id="todayGoal">Сделать сегодняшнее решение осознанно, а не на автомате.</p></div><span class="arrow">›</span>
+      </button>
 
-      <section class="section">
-        <div class="section-head">
-          <h2>Голосовой путь</h2><span class="muted">13 голосов · месяц 1</span>
-        </div>
-        <div class="voice-card glass">
-          <div class="voice-top">
-            <div class="voice-play" id="voicePlay">▶</div>
-            <div>
-              <div class="muted small">Следующий голос</div>
-              <h3 id="voiceTitle">Начало пути</h3>
-            </div>
-          </div>
-          <div class="voice-line"><span id="voiceFill"></span></div>
-          <p id="voiceStatus">Доступен сейчас</p>
-        </div>
-      </section>
+      <div class="section-head"><h2>Голосовой путь</h2><span class="muted">13 голосов · месяц 1</span></div>
+      <button class="wide-card voice-card" data-page="voices">
+        <div class="play">▶</div><div><div class="muted">Следующий голос</div><h3>Начало пути</h3></div>
+        <div class="voice-line"><i></i></div><small>Доступен сейчас</small>
+      </button>
 
-      <section class="stats-grid">
-        <div class="mini-card"><span>Сделки</span><b>0</b><small>за сегодня</small></div>
-        <div class="mini-card"><span>Win rate</span><b>—</b><small>пока нет данных</small></div>
-        <div class="mini-card"><span>Рейтинг</span><b>—</b><small>начни путь</small></div>
-        <div class="mini-card"><span>XP</span><b>0</b><small>EDI365</small></div>
-      </section>
-    </main>
+      <div class="grid">
+        <button class="mini-card" data-page="trades"><b>📝</b><span>Сделки</span><small>0 сегодня</small></button>
+        <button class="mini-card" data-page="stats"><b>📊</b><span>Статистика</span><small>Пока нет данных</small></button>
+        <button class="mini-card" data-page="psychology"><b>🧠</b><span>Психология</span><small>SOS и разбор</small></button>
+        <button class="mini-card" data-page="calculator"><b>🧮</b><span>Калькулятор</span><small>Риск и лот</small></button>
+      </div>
+    </section>
+
+    <section class="screen" id="edi365">
+      <div class="page-card">
+        <div class="big-number"><span id="ediDay">1</span><small>/365</small></div>
+        <h2>365 дней решений</h2>
+        <p>Не нужно становиться идеальным за один день. Здесь важнее то, как меняются твои решения со временем.</p>
+        <div class="progress"><i id="ediProgress"></i></div>
+        <div class="split"><span>Серия <b id="ediStreak">1</b></span><span>Score <b id="ediScore">0%</b></span></div>
+      </div>
+      <div class="section-head"><h2>Цель сегодня</h2></div>
+      <button class="wide-card action-card" id="completeGoal">
+        <div class="emoji">🎯</div><div><h3>Осознанное решение</h3><p id="goalStatus">Нажми после выполнения цели.</p></div><span class="arrow">›</span>
+      </button>
+      <div class="section-head"><h2>Месяц 1</h2><span class="muted">13 голосов</span></div>
+      <div class="timeline" id="monthTimeline"></div>
+    </section>
+
+    <section class="screen" id="voices">
+      <div class="page-card">
+        <div class="split"><div><div class="muted">ГОЛОСОВОЙ ПУТЬ</div><h2>Месяц 1</h2></div><b>1 / 13</b></div>
+        <p>Голоса открываются постепенно. Открытый голос остаётся доступным для повторного прослушивания.</p>
+      </div>
+      <div id="voiceList" class="list"></div>
+    </section>
+
+    <section class="screen" id="trades">
+      <div class="section-head"><h2>Сделки</h2><span class="pill">Журнал</span></div>
+      <div class="page-card empty"><div class="empty-icon">📝</div><h3>Пока нет сделок</h3><p>Здесь будет твой журнал: вход, результат, причина, эмоция и заметка.</p><button class="primary" id="addDemoTrade">Добавить тестовую сделку</button></div>
+    </section>
+
+    <section class="screen" id="stats">
+      <div class="section-head"><h2>Статистика</h2><span class="pill">Всё время</span></div>
+      <div class="stats-grid">
+        <div class="stat"><span>Сделок</span><b id="statTrades">0</b></div>
+        <div class="stat"><span>Win rate</span><b id="statWin">—</b></div>
+        <div class="stat"><span>Плюсов</span><b id="statWins">0</b></div>
+        <div class="stat"><span>Минусов</span><b id="statLosses">0</b></div>
+      </div>
+      <div class="page-card"><h3>Главное</h3><p>Финальная статистика будет брать реальные данные из твоей базы бота, а не из этого демо.</p></div>
+    </section>
+
+    <section class="screen" id="psychology">
+      <div class="section-head"><h2>Психология</h2></div>
+      <div class="page-card sos"><div class="emoji">🧠</div><h2>SOS</h2><p>Если чувствуешь, что начинаешь действовать на эмоциях — остановись и сначала разберись с состоянием.</p><button class="primary" id="sosBtn">Мне сейчас тяжело</button><div id="sosText" class="notice hidden">Пауза. Не пытайся отбиться. Сделай несколько спокойных вдохов и вернись к решению позже.</div></div>
+    </section>
+
+    <section class="screen" id="calculator">
+      <div class="section-head"><h2>Калькулятор</h2></div>
+      <div class="page-card form">
+        <label>Баланс<input id="balance" type="number" value="100"></label>
+        <label>Риск, %<input id="risk" type="number" value="1" step="0.1"></label>
+        <button class="primary" id="calcBtn">Рассчитать</button>
+        <div class="result" id="calcResult">$1.00</div>
+      </div>
+    </section>
+
+    <section class="screen" id="profile">
+      <div class="profile-card">
+        <div class="avatar">👤</div><h2 id="profileName">Трейдер</h2><p class="muted">Твой путь EdiBalance</p>
+      </div>
+      <div class="menu-list">
+        <button data-page="plans">💳 Тариф и доступ <span>›</span></button>
+        <button data-page="settings">⚙️ Настройки <span>›</span></button>
+      </div>
+    </section>
+
+    <section class="screen" id="plans">
+      <div class="section-head"><h2>Тарифы</h2><span class="pill">Доступ</span></div>
+      <div class="plans">
+        <div class="plan"><h3>START</h3><b>20 зарядов</b><strong>$7.99</strong><button class="primary">Выбрать</button></div>
+        <div class="plan featured"><h3>PRO</h3><b>40 зарядов</b><strong>$9.99</strong><button class="primary">Выбрать</button></div>
+        <div class="plan"><h3>ELITE</h3><b>60 зарядов</b><strong>$12.99</strong><button class="primary">Выбрать</button></div>
+      </div>
+      <div class="page-card"><p>Оплату подключим отдельно после того, как интерфейс и авторизация Mini App будут готовы.</p></div>
+    </section>
+
+    <section class="screen" id="settings">
+      <div class="section-head"><h2>Настройки</h2></div>
+      <div class="menu-list">
+        <button>🌐 Язык <span>Русский ›</span></button>
+        <button>🔔 Уведомления <span>Вкл. ›</span></button>
+        <button>🎙 Голосовой путь <span>Вкл. ›</span></button>
+      </div>
+    </section>
 
     <nav class="bottom-nav">
-      <button class="active"><span>⌂</span><small>Главная</small></button>
-      <button><span>🎯</span><small>EDI365</small></button>
-      <button><span>📊</span><small>Статистика</small></button>
-      <button><span>👤</span><small>Профиль</small></button>
+      <button class="nav active" data-page="home">⌂<span>Главная</span></button>
+      <button class="nav" data-page="edi365">🎯<span>EDI365</span></button>
+      <button class="nav" data-page="stats">📊<span>Статистика</span></button>
+      <button class="nav" data-page="profile">👤<span>Профиль</span></button>
     </nav>
-  </div>
+  </main>
   <script src="app.js"></script>
 </body>
 </html>

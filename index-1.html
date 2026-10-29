@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f2">
+<title>EdiBalance — Obsidian Glow</title>
+<style>
+:root{--bg:#f5f5f2;--card:#fff;--ink:#121212;--muted:#92928d;--line:#e7e7e2;--soft:#efefeb;--glow:rgba(95,105,255,.30);--violet:#626bff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:-20%;pointer-events:none;background:radial-gradient(circle at 75% 12%,rgba(98,107,255,.08),transparent 24%),radial-gradient(circle at 12% 72%,rgba(160,120,255,.045),transparent 25%);z-index:-1}
+.app{width:min(100%,430px);min-height:100vh;margin:auto;padding:18px 20px calc(112px + env(safe-area-inset-bottom))}
+.top{height:54px;display:flex;align-items:center;justify-content:space-between;margin-bottom:29px}.brand{font-size:13px;font-weight:780;letter-spacing:3.2px}.tag{font-size:9px;color:#aaa;letter-spacing:1.6px;margin-top:4px}.avatar{width:42px;height:42px;border-radius:15px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:750;box-shadow:0 8px 24px rgba(0,0,0,.04)}
+.page{display:none;animation:pageIn .32s ease}.page.active{display:block}@keyframes pageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.title{font-size:42px;line-height:1;letter-spacing:-2.5px;font-weight:790;margin:0 0 27px}.eyebrow{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#a2a29d;font-weight:750}
+.glowtext{background:linear-gradient(90deg,#111 0%,#111 32%,#6570ff 50%,#111 68%,#111 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4.5s ease-in-out infinite}@keyframes shine{0%,45%{background-position:100% 50%}70%,100%{background-position:0% 50%}}
+.card{background:rgba(255,255,255,.94);border:1px solid rgba(225,225,220,.9);border-radius:28px;box-shadow:0 15px 45px rgba(20,20,18,.045);backdrop-filter:blur(12px)}
+.hero{padding:27px 25px 23px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-135px;top:-115px;border:1px solid rgba(98,107,255,.10);box-shadow:0 0 80px rgba(98,107,255,.06)}.hero-top{position:relative;z-index:1;display:flex;justify-content:space-between}.day{font-size:62px;line-height:.82;letter-spacing:-4px;font-weight:800;margin-top:9px}.day span{font-size:18px;letter-spacing:-.5px;color:#aaa;font-weight:500}.score{text-align:right}.score-num{font-size:30px;font-weight:780;margin-top:7px;text-shadow:0 0 24px rgba(98,107,255,.16)}.score-label{font-size:8px;color:#aaa;letter-spacing:1.5px;margin-top:3px}.hero h2{font-size:23px;letter-spacing:-.8px;margin:30px 0 8px}.hero p{font-size:13px;line-height:1.55;color:#777;margin:0;max-width:305px}.track{height:4px;background:#e8e8e4;border-radius:5px;margin-top:24px;overflow:hidden}.track i{display:block;width:18%;height:100%;border-radius:5px;background:linear-gradient(90deg,#171717,#626bff);box-shadow:0 0 12px rgba(98,107,255,.42)}.trackmeta{display:flex;justify-content:space-between;color:#aaa;font-size:9px;margin-top:9px}
+.head{display:flex;align-items:center;justify-content:space-between;margin:29px 1px 12px}.head h2{font-size:19px;letter-spacing:-.55px;margin:0}.head span{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.4px}
+.goal{display:flex;align-items:center;padding:15px 17px;gap:14px}.check{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#f1f1ee,#e9e9e5);display:grid;place-items:center;font-size:15px;box-shadow:inset 0 1px #fff}.goal strong{font-size:13px}.goal small{display:block;color:#999;font-size:10px;margin-top:5px}.arrow{margin-left:auto;color:#aaa;font-size:22px}
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:10px}.module{padding:19px 17px;min-height:113px;background:#fff;border:1px solid #e8e8e4;border-radius:22px;transition:.18s;position:relative;overflow:hidden}.module:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;right:-50px;bottom:-50px;background:radial-gradient(circle,rgba(98,107,255,.12),transparent 68%)}.module:active{transform:scale(.98)}.module .symbol{font-size:15px;color:#555;margin-bottom:25px}.module b{font-size:12px}.module small{display:block;color:#999;font-size:10px;margin-top:5px}
+.insight{padding:21px}.insight-row{display:flex;align-items:center;justify-content:space-between}.insight b{font-size:17px}.insight p{font-size:11px;color:#999;line-height:1.5;margin:8px 0 0}.mini-line{height:38px;margin-top:16px;display:flex;align-items:flex-end;gap:4px}.mini-line i{flex:1;background:#deded9;border-radius:3px 3px 1px 1px}.mini-line i.hot{background:linear-gradient(180deg,#626bff,#171717);box-shadow:0 0 10px rgba(98,107,255,.18)}
+.edi-card{padding:27px;position:relative;overflow:hidden}.edi-card:after{content:"EDI365";position:absolute;right:-25px;bottom:10px;font-size:62px;font-weight:900;color:#f2f2ef;letter-spacing:-5px;z-index:0}.edi-content{position:relative;z-index:1}.edi-num{font-size:44px;letter-spacing:-2.8px;font-weight:800;margin-top:9px}.status{font-size:8px;letter-spacing:1.4px;color:#969690;text-transform:uppercase}.focus{margin-top:25px;padding-top:23px;border-top:1px solid var(--line)}.focus h2{font-size:24px;letter-spacing:-.8px;margin:8px 0}.focus p{color:#777;font-size:12px;line-height:1.55;margin:0}
+.voice{display:flex;align-items:center;padding:17px}.play{width:46px;height:46px;border-radius:50%;background:#151515;color:#fff;display:grid;place-items:center;font-size:11px;margin-right:14px;box-shadow:0 0 0 7px rgba(98,107,255,.055)}.voice b{font-size:13px}.voice small{display:block;color:#999;font-size:10px;margin-top:5px}.voice .time{margin-left:auto;color:#aaa;font-size:9px}
+.filters{display:flex;gap:7px;overflow:auto;margin:-7px 0 16px;padding-bottom:2px}.filter{white-space:nowrap;border:1px solid var(--line);background:#fff;color:#999;border-radius:17px;padding:9px 13px;font-size:10px}.filter.active{background:#151515;color:#fff;border-color:#151515}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{padding:20px;border-radius:23px;background:#fff;border:1px solid var(--line)}.metric label{font-size:10px;color:#999}.metric b{display:block;font-size:28px;letter-spacing:-1px;margin-top:22px}.chart{padding:21px;margin-top:10px}.chartbox{height:130px;display:flex;align-items:flex-end;gap:7px;border-bottom:1px solid #eee}.col{flex:1;background:#e2e2dd;border-radius:4px 4px 0 0}.col.dark{background:linear-gradient(180deg,#626bff,#171717);box-shadow:0 0 12px rgba(98,107,255,.12)}.labels{display:flex;justify-content:space-between;color:#aaa;font-size:8px;margin-top:8px}
+.score-card{padding:24px;display:flex;align-items:center;gap:19px}.ring{width:91px;height:91px;flex:0 0 91px;border-radius:50%;background:conic-gradient(#626bff 0 31%,#e8e8e4 31%);display:grid;place-items:center;box-shadow:0 0 30px rgba(98,107,255,.12)}.ring:after{content:"31";width:71px;height:71px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:21px;font-weight:780}.score-card b{font-size:17px}.score-card p{font-size:11px;color:#999;line-height:1.5;margin:7px 0 0}
+.profile{text-align:center;padding:28px}.profile-avatar{width:92px;height:92px;border-radius:28px;background:linear-gradient(145deg,#f2f2ef,#e8e8e4);margin:auto;display:grid;place-items:center;font-size:25px;font-weight:780;box-shadow:0 10px 30px rgba(0,0,0,.05)}.profile h2{font-size:23px;margin:18px 0 4px}.profile p{color:#999;font-size:11px;margin:0}.score-strip{display:flex;justify-content:space-between;align-items:center;padding:20px 21px}.score-strip .label{color:#999;font-size:10px}.score-strip b{font-size:27px;text-shadow:0 0 18px rgba(98,107,255,.15)}.progress-mini{width:110px;height:4px;background:#e9e9e5;border-radius:4px;margin-top:8px}.progress-mini i{display:block;width:31%;height:100%;background:#626bff;border-radius:4px;box-shadow:0 0 9px rgba(98,107,255,.4)}
+.menu{padding:7px 20px}.row{display:flex;align-items:center;gap:13px;padding:15px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row-icon{width:34px;height:34px;border-radius:11px;background:#f0f0ec;display:grid;place-items:center;font-size:12px}.row b{font-size:12px}.row small{display:block;color:#999;font-size:9px;margin-top:3px}.row .arrow{margin-left:auto}
+.nav{position:fixed;z-index:20;left:50%;bottom:14px;transform:translateX(-50%);width:min(390px,calc(100% - 30px));height:70px;padding:5px;background:rgba(255,255,255,.95);border:1px solid #e4e4df;border-radius:26px;box-shadow:0 18px 55px rgba(20,20,18,.12);display:grid;grid-template-columns:repeat(4,1fr);backdrop-filter:blur(20px)}.nav button{border:0;background:transparent;border-radius:21px;color:#aaa;font:inherit;font-size:9px}.nav button.active{background:#efefeb;color:#171717;box-shadow:inset 0 1px #fff}.nav .nicon{display:block;font-size:16px;margin-bottom:5px}
+</style>
+
+<style>
+.rank-avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:780;color:#222;box-shadow:0 5px 16px rgba(0,0,0,.08)}
+.rank-avatar.small{width:38px;height:38px;background:linear-gradient(145deg,#eeeeeb,#ddddda);font-size:12px;flex:0 0 38px}
+.ranking-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}
+.ranking-row:last-child{border-bottom:0}
+.ranking-row .rank{width:22px;color:#aaa;font-size:10px;font-variant-numeric:tabular-nums}
+.rank-info{min-width:0;flex:1}.rank-info b{font-size:12px}.rank-info small{display:block;color:#999;font-size:9px;margin-top:3px}.ranking-row>strong{font-size:14px}
+</style>
+
+<style>
+.plan-stack{display:flex;flex-direction:column;gap:12px}.plan-card{position:relative;background:rgba(255,255,255,.96);border:1px solid #e6e6e2;border-radius:27px;padding:22px 21px;box-shadow:0 14px 40px rgba(20,20,18,.045);overflow:hidden}.plan-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.plan-name{font-size:13px;font-weight:800;letter-spacing:2.2px}.plan-price{font-size:31px;font-weight:800;letter-spacing:-1.6px;margin-top:7px}.plan-price span{font-size:10px;font-weight:500;color:#999;letter-spacing:0}.charges{padding:7px 9px;border-radius:12px;background:#f0f0ec;color:#777;font-size:9px;white-space:nowrap}.plan-desc{font-size:11px;color:#888;line-height:1.45;margin:13px 0 16px}.plan-line{display:grid;grid-template-columns:1fr 1fr;gap:7px;color:#555;font-size:10px;margin:7px 0}.plan-btn{width:100%;border:0;border-radius:16px;background:#171717;color:#fff;padding:13px 10px;margin-top:16px;font-size:11px;font-weight:650}.pro{border:1px solid rgba(98,107,255,.42);box-shadow:0 18px 48px rgba(98,107,255,.12),0 2px 0 rgba(98,107,255,.12) inset}.pro:before{content:"";position:absolute;inset:-80px auto auto 55%;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(98,107,255,.13),transparent 68%);pointer-events:none}.popular{position:absolute;right:17px;top:15px;font-size:8px;letter-spacing:1.4px;color:#626bff;font-weight:800}.pro-underline{width:45px;height:3px;border-radius:4px;background:linear-gradient(90deg,#626bff,transparent);box-shadow:0 0 12px rgba(98,107,255,.6);margin:7px 0 2px}.pro-charge{background:#eceeff;color:#626bff}.promo{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 11px;border-radius:13px;background:#f2f2ff;margin:2px 0 13px;font-size:9px;color:#626bff}.promo span{color:#8b8b99}.pro-btn{background:linear-gradient(100deg,#171717,#30365e);box-shadow:0 0 22px rgba(98,107,255,.22)}.elite{background:linear-gradient(145deg,#fff,#fafafa);border-color:#dcdcd7}.elite-glow{position:absolute;right:-45px;top:-45px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(98,107,255,.09),transparent 68%)}.stars-toggle{display:flex;background:#f0f0ec;border-radius:12px;padding:3px;gap:2px}.stars-toggle button{border:0;background:transparent;border-radius:9px;padding:7px 10px;color:#999;font-size:10px}.stars-toggle button.active{background:#fff;color:#171717;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div><div class="brand">EDIBALANCE</div><div class="tag">DISCIPLINE OVER EMOTION</div></div><div class="avatar">E</div></header>
+
+<main id="home" class="page active">
+<h1 class="title glowtext">Главная</h1>
+<div class="card hero"><div class="hero-top"><div><div class="eyebrow">Текущий путь</div><div class="day">01<span>/365</span></div></div><div class="score"><div class="eyebrow">EDI Score</div><div class="score-num glowtext">31</div><div class="score-label">DISCIPLINE</div></div></div><h2>Один день. Одно решение.</h2><p>Не гонись за идеальным результатом. Сфокусируйся на качестве своего решения сегодня.</p><div class="track"><i></i></div><div class="trackmeta"><span>День 1</span><span>0.3% пути</span></div></div>
+<div class="head"><h2>Цель дня</h2><span>1 задача</span></div><div class="card goal"><div class="check">✓</div><div><strong>Осознанное решение</strong><small>Подтвердить после выполнения</small></div><div class="arrow">›</div></div>
+<div class="head"><h2>Инструменты</h2><span>Быстрый доступ</span></div><div class="modules"><div class="module" onclick="openDetail('journal')" style="cursor:pointer"><div class="symbol">↗</div><b>Trade Journal</b><small>Сделки и эмоции</small></div><div class="module" onclick="openDetail('risk')" style="cursor:pointer"><div class="symbol">◈</div><b>Risk Manager</b><small>Контроль риска</small></div><div class="module" onclick="openDetail('psych')" style="cursor:pointer"><div class="symbol">○</div><b>Psychology SOS</b><small>Помощь в моменте</small></div><div class="module" onclick="openDetail('voices')" style="cursor:pointer"><div class="symbol">◉</div><b>156 Voices</b><small>Голосовой путь</small></div></div>
+<div class="head"><h2>Активность</h2><span>Эта неделя</span></div><div class="card insight"><div class="insight-row"><b class="glowtext">Твоя дисциплина</b><span style="font-size:11px;color:#999">31 / 100</span></div><p>Score растёт от последовательных действий, а не от количества сделок.</p><div class="mini-line"><i style="height:24%"></i><i style="height:34%"></i><i style="height:28%"></i><i style="height:45%"></i><i class="hot" style="height:63%"></i><i style="height:52%"></i><i class="hot" style="height:70%"></i><i class="hot" style="height:81%"></i></div></div>
+</main>
+
+<main id="edi" class="page">
+<h1 class="title glowtext">EDI365</h1><div class="card edi-card"><div class="edi-content"><div class="status">Server verified</div><div class="edi-num">01 / 365</div><div class="track" style="margin-top:25px"><i></i></div><div class="trackmeta"><span>1 день завершён</span><span>364 впереди</span></div><div class="focus"><div class="eyebrow">Фокус дня</div><h2 class="glowtext">Не торопись.</h2><p>Перед решением остановись и оцени своё состояние. День засчитывается только после подтверждения сервером.</p></div></div></div>
+<div class="head"><h2>Голос дня</h2><span>01 / 156</span></div><div class="card voice"><div class="play">▶</div><div><b>Начало пути</b><small>EDI365 · 04:12</small></div><span class="time">LOCKED</span></div>
+<div class="head"><h2>Прогресс</h2><span>XP 0</span></div><div class="card score-strip"><div><div class="label">EDI SCORE</div><div class="progress-mini"><i></i></div></div><b class="glowtext">31</b></div>
+</main>
+
+<main id="stats" class="page">
+<h1 class="title glowtext">Статистика</h1><div class="filters"><button class="filter active">Всё время</button><button class="filter">7 дней</button><button class="filter">30 дней</button></div>
+<div class="metrics"><div class="metric"><label>Сделки</label><b>0</b></div><div class="metric"><label>Win rate</label><b>—</b></div><div class="metric"><label>Плюс</label><b>0</b></div><div class="metric"><label>Минус</label><b>0</b></div></div>
+<div class="head"><h2>Активность</h2><span>7 дней</span></div><div class="card chart"><div class="chartbox"><i class="col" style="height:22%"></i><i class="col" style="height:39%"></i><i class="col" style="height:31%"></i><i class="col dark" style="height:58%"></i><i class="col" style="height:45%"></i><i class="col dark" style="height:74%"></i><i class="col" style="height:54%"></i></div><div class="labels"><span>ПН</span><span>ВТ</span><span>СР</span><span>ЧТ</span><span>ПТ</span><span>СБ</span><span>ВС</span></div></div>
+<div class="head"><h2>EDI Score</h2><span>Поведение</span></div><div class="card score-card"><div class="ring"></div><div><b class="glowtext">Дисциплина</b><p>Оценивается качество действий, стабильность и соблюдение правил.</p></div></div>
+</main>
+
+<main id="profile" class="page">
+<h1 class="title glowtext">Профиль</h1>
+<div class="card profile"><div class="profile-avatar">E</div><h2>EdiBalance User</h2><p>Путь начат сегодня</p></div>
+<div class="card score-strip"><div><div class="label">EDI SCORE</div><div class="progress-mini"><i></i></div></div><b class="glowtext">31</b></div>
+
+<div class="head"><h2>Все разделы</h2><span>20 функций</span></div>
+<div class="card menu">
+  <div class="row" onclick="openDetail('plans')" style="cursor:pointer" onclick="go('plans',null)" style="cursor:pointer"><div class="row-icon">◆</div><div><b>Тарифы</b><small>START · PRO · ELITE · Stars</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('journal')" style="cursor:pointer"><div class="row-icon">▤</div><div><b>Trade Journal</b><small>Сделки · эмоции · результаты</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('risk')" style="cursor:pointer"><div class="row-icon">◈</div><div><b>Risk Manager</b><small>Расчёт позиции · контроль риска</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('stats')" style="cursor:pointer"><div class="row-icon">▥</div><div><b>Statistics</b><small>Подробная аналитика · динамика</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('psych')" style="cursor:pointer"><div class="row-icon">○</div><div><b>Psychology SOS</b><small>Помощь в моменте</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('human')" style="cursor:pointer"><div class="row-icon">+</div><div><b>Human SOS</b><small>До 3 обращений в месяц</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('edi')" style="cursor:pointer"><div class="row-icon">◉</div><div><b>EDI365</b><small>365 дней · XP · Score</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('academy')" style="cursor:pointer"><div class="row-icon">⌁</div><div><b>Academy</b><small>Обучение и материалы</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('voices')" style="cursor:pointer"><div class="row-icon">◉</div><div><b>Voices</b><small>156 голосовых сообщений</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('ach')" style="cursor:pointer"><div class="row-icon">★</div><div><b>Achievements</b><small>Достижения и награды</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="go('top100',null)" style="cursor:pointer"><div class="row-icon">#</div><div><b>Top 100</b><small>Живой рейтинг пользователей</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('hall')" style="cursor:pointer"><div class="row-icon">♛</div><div><b>Hall of Fame</b><small>Лучшие результаты EdiBalance</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('duels')" style="cursor:pointer"><div class="row-icon">↔</div><div><b>Duels</b><small>Соревнования между пользователями</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('live')" style="cursor:pointer"><div class="row-icon">◎</div><div><b>LIVE</b><small>Живые данные сообщества</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('creator')" style="cursor:pointer"><div class="row-icon">🤝</div><div><b>Creator</b><small>Партнёрская программа</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('payments')" style="cursor:pointer"><div class="row-icon">▣</div><div><b>Payments</b><small>Оплата · доступ · история</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('paySupport')" style="cursor:pointer"><div class="row-icon">↩</div><div><b>Payment Support</b><small>Оплата · возврат · отмена</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('documents')" style="cursor:pointer"><div class="row-icon">□</div><div><b>Documents</b><small>Условия · Privacy · Consent · Payments</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('support')" style="cursor:pointer"><div class="row-icon">?</div><div><b>Поддержка</b><small>Связаться с командой EdiBalance</small></div><div class="arrow">›</div></div>
+</div>
+
+<div class="head"><h2>Настройки</h2><span>Последний раздел</span></div>
+<div class="card menu">
+  <div class="row" onclick="openDetail('language')" style="cursor:pointer"><div class="row-icon">A</div><div><b>Язык</b><small>Русский · Azərbaycan · English</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('notifications')" style="cursor:pointer"><div class="row-icon">◌</div><div><b>Уведомления</b><small>EDI365 · напоминания · события</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('security')" style="cursor:pointer"><div class="row-icon">⌁</div><div><b>Безопасность</b><small>Сессии · Telegram · защита аккаунта</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('about')" style="cursor:pointer"><div class="row-icon">i</div><div><b>О EdiBalance</b><small>Версия · документы · правила</small></div><div class="arrow">›</div></div>
+  <div class="row" onclick="openDetail('logout')" style="cursor:pointer" style="border-bottom:0"><div class="row-icon">↪</div><div><b>Выйти из аккаунта</b><small>Завершить текущую сессию</small></div><div class="arrow">›</div></div>
+</div>
+</main>
+<main id="top100" class="page">
+<h1 class="title glowtext">Top 100</h1>
+<div class="rank-topline">
+  <button class="rank-back" onclick="go('profile',null)">‹ Назад</button>
+  <span>RANKING</span>
+  <button class="rank-select" onclick="toast('Все участники')">Все участники <b>⌄</b></button>
+</div>
+<div class="rank-summary card">
+  <div class="rank-summary-item"><div class="summary-icon people">♟</div><div><div class="eyebrow">ВСЕГО УЧАСТНИКОВ</div><strong id="rankingCount">10 428</strong></div></div>
+  <div class="rank-summary-item"><div class="summary-icon cup">♛</div><div><div class="eyebrow">ОБНОВЛЯЕТСЯ</div><span class="live-dot"></span><span class="live-text">В реальном времени</span></div></div>
+</div>
+<div id="rankingPodium" class="podium"></div>
+<div class="ranking-table card">
+  <div class="ranking-head"><span>#</span><span>ПОЛЬЗОВАТЕЛЬ</span><span>EDI SCORE</span><span>XP</span><span>СТРИК</span></div>
+  <div id="rankingList"></div>
+</div>
+<div class="my-rank card">
+  <div class="my-rank-place"><span>Ваше место</span><strong id="myRankMeta">#347</strong></div>
+  <div class="rank-avatar my-avatar">E</div>
+  <div class="my-rank-info"><b>Edgar <em>Вы</em></b><span class="score-pill" id="myRankValue">71</span></div>
+  <div class="my-rank-extra"><span>XP 6 420</span><span>🔥 12 дней</span></div>
+</div>
+</main>
+
+<main id="plans" class="page">
+<h1 class="title glowtext">Тарифы</h1>
+
+<div class="card" style="padding:20px 21px;margin-bottom:13px">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div class="eyebrow">Доступ EdiBalance</div>
+      <div style="font-size:20px;font-weight:780;letter-spacing:-.6px;margin-top:7px">Выбери свой уровень</div>
+    </div>
+    <div class="stars-toggle"><button class="active" onclick="setCurrency('USD',this)">USD</button><button onclick="setCurrency('STARS',this)">★</button></div>
+  </div>
+</div>
+
+<div class="plan-stack">
+  <div class="plan-card">
+    <div class="plan-head"><div><div class="plan-name">START</div><div class="plan-price">$4.99 <span>/ месяц</span></div></div><div class="charges">20 Charges</div></div>
+    <div class="plan-desc">Базовый контроль дисциплины и риска.</div>
+    <div class="plan-line"><span>✓ Trade Journal</span><span>✓ Risk Manager</span></div>
+    <div class="plan-line"><span>✓ 20 Charges</span><span>✓ Hard Stop</span></div>
+    <div class="plan-line"><span>✓ Basic Statistics</span><span>✓ Psychology SOS</span></div>
+    <button class="plan-btn" onclick="selectTariff('START')">Выбрать START</button>
+  </div>
+
+  <div class="plan-card pro">
+    <div class="popular">MOST POPULAR</div>
+    <div class="pro-underline"></div>
+    <div class="plan-head"><div><div class="plan-name glowtext">PRO</div><div class="plan-price">$6.99 <span>/ месяц</span></div></div><div class="charges pro-charge">40 Charges</div></div>
+    <div class="plan-desc">Полный путь EdiBalance для системной работы.</div>
+    <div class="promo"><b>Первый месяц $2</b><span>затем $6.99 / месяц</span></div>
+    <div class="plan-line"><span>✓ Всё из START</span><span>✓ EDI365 · 365 дней</span></div>
+    <div class="plan-line"><span>✓ 156 Voices</span><span>✓ Daily Goals</span></div>
+    <div class="plan-line"><span>✓ EDI Score + XP</span><span>✓ Hall of Fame</span></div>
+    <button class="plan-btn pro-btn" onclick="selectTariff('PRO')">Выбрать PRO</button>
+  </div>
+
+  <div class="plan-card elite">
+    <div class="elite-glow"></div>
+    <div class="plan-head"><div><div class="plan-name">ELITE</div><div class="plan-price">$9.99 <span>/ месяц</span></div></div><div class="charges">60 Charges</div></div>
+    <div class="plan-desc">Максимальный уровень доступа и возможностей.</div>
+    <div class="plan-line"><span>✓ Всё из PRO</span><span>✓ 60 Charges</span></div>
+    <div class="plan-line"><span>✓ Расширенная аналитика</span><span>✓ Все достижения</span></div>
+    <div class="plan-line"><span>✓ Duels + Top 100</span><span>✓ Полный доступ</span></div>
+    <button class="plan-btn" onclick="selectTariff('ELITE')">Выбрать ELITE</button>
+  </div>
+</div>
+
+<div class="card" style="padding:18px 20px;margin-top:13px">
+  <div class="eyebrow">Оплата</div>
+  <div style="font-size:13px;font-weight:650;margin-top:7px">Telegram Stars</div>
+  <div style="font-size:10px;color:#999;line-height:1.5;margin-top:5px">После успешной оплаты доступ активируется автоматически. Возврат и отмена — отдельные действия.</div>
+</div>
+</main>
+
+</div>
+<nav class="nav"><button class="active" onclick="go('home',this)"><span class="nicon">⌂</span>Главная</button><button onclick="go('edi',this)"><span class="nicon">◉</span>EDI365</button><button onclick="go('stats',this)"><span class="nicon">▥</span>Статистика</button><button onclick="go('profile',this)"><span class="nicon">○</span>Профиль</button></nav>
+<script>function go(id,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');const nav=document.querySelector('.nav');if(nav)nav.style.display=id==='top100'?'none':'';scrollTo({top:0,behavior:'smooth'})}</script>
+
+<style>
+#details{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 20px calc(40px + env(safe-area-inset-bottom));display:none}
+#details.open{display:block}
+.detail-screen{display:none;animation:pageIn .28s ease}.detail-screen.active{display:block;width:min(100%,430px);margin:0 auto}
+.backbar{display:flex;align-items:center;gap:10px;margin:-5px 0 24px}.backbtn{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;font-size:11px;color:#666;box-shadow:0 6px 18px rgba(0,0,0,.04)}.backtitle{font-size:11px;color:#999}
+.detail-card{padding:22px;margin-bottom:12px}.detail-card h2{font-size:22px;letter-spacing:-.7px;margin:0 0 8px}.detail-card p{font-size:12px;line-height:1.55;color:#777;margin:0}
+.big-action{width:100%;border:0;border-radius:16px;background:#171717;color:#fff;padding:14px;font-size:11px;font-weight:650;margin-top:15px}
+.input{width:100%;border:1px solid var(--line);background:#fafaf8;border-radius:14px;padding:13px;font:inherit;font-size:12px;outline:0;margin-top:8px}.input:focus{border-color:#8a90ff;box-shadow:0 0 0 4px rgba(98,107,255,.08)}
+.choice{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px}.choice:last-child{border:0}.toggle{width:43px;height:24px;border-radius:20px;background:#deded9;padding:3px}.toggle i{display:block;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}.toggle.on{background:#626bff;box-shadow:0 0 12px rgba(98,107,255,.25)}.toggle.on i{transform:translateX(19px)}
+.charge{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.charge:last-child{border:0}.charge b{font-size:12px}.charge small{display:block;color:#999;font-size:9px;margin-top:4px}
+.avatar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.person{background:#fff;border:1px solid var(--line);border-radius:19px;padding:14px 8px;text-align:center}.person .pa{width:45px;height:45px;border-radius:50%;margin:auto;display:grid;place-items:center;font-weight:750}.person b{display:block;font-size:11px;margin-top:8px}.person small{color:#999;font-size:9px}
+.support-option{padding:15px;border:1px solid var(--line);border-radius:18px;margin:9px 0;background:#fff}.support-option b{font-size:12px}.support-option small{display:block;color:#999;font-size:9px;margin-top:5px}
+.voice-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}.voice-row:last-child{border:0}.vnum{font-size:9px;color:#aaa;width:26px}.vplay{width:38px;height:38px;border-radius:50%;background:#171717;color:#fff;display:grid;place-items:center;font-size:9px}.voice-row b{font-size:11px}.voice-row small{display:block;color:#999;font-size:9px;margin-top:3px}.locked{margin-left:auto;font-size:8px;color:#aaa}
+</style>
+<div id="details"></div>
+<script>
+const detailData = {
+plans: {
+title:"Тарифы", eyebrow:"ACCESS",
+body:`<div class="detail-card card tariff-top">
+  <div class="tariff-head">
+    <div>
+      <div class="eyebrow">ДОСТУП EDIBALANCE</div>
+      <div class="tariff-subtitle">Выбери свой уровень</div>
+    </div>
+    <div class="stars-toggle">
+      <button class="active" onclick="tariffCurrency('USD',this)">USD</button>
+      <button onclick="tariffCurrency('STARS',this)">★</button>
+    </div>
+  </div>
+</div>
+
+<div class="detail-card card tariff-card">
+  <div class="tariff-card-head"><div class="tariff-name">START</div><div class="charges">20 Charges</div></div>
+  <div class="tariff-price">$4.99 <span>/ месяц</span></div>
+  <div class="tariff-desc">Базовый контроль дисциплины и риска.</div>
+  <div class="tariff-features">
+    <span>✓ Trade Journal</span><span>✓ Risk Manager</span>
+    <span>✓ 20 Charges</span><span>✓ Hard Stop</span>
+    <span>✓ Basic Statistics</span><span>✓ Psychology SOS</span>
+  </div>
+  <button class="plan-btn" onclick="chooseTariffDetail('START')">Выбрать START</button>
+</div>
+
+<div class="detail-card card tariff-card tariff-pro">
+  <div class="popular">MOST POPULAR</div>
+  <div class="pro-underline"></div>
+  <div class="tariff-card-head"><div class="tariff-name glowtext">PRO</div><div class="charges pro-charge">40 Charges</div></div>
+  <div class="tariff-price">$6.99 <span>/ месяц</span></div>
+  <div class="tariff-desc">Полный путь EdiBalance для системной работы.</div>
+  <div class="promo"><b>Первый месяц $2</b><span>затем $6.99 / месяц</span></div>
+  <div class="tariff-features">
+    <span>✓ Всё из START</span><span>✓ EDI365 · 365 дней</span>
+    <span>✓ 156 Voices</span><span>✓ Daily Goals</span>
+    <span>✓ EDI Score + XP</span><span>✓ Hall of Fame</span>
+  </div>
+  <button class="plan-btn pro-btn" onclick="chooseTariffDetail('PRO')">Выбрать PRO</button>
+</div>
+
+<div class="detail-card card tariff-card">
+  <div class="tariff-card-head"><div class="tariff-name">ELITE</div><div class="charges">60 Charges</div></div>
+  <div class="tariff-price">$9.99 <span>/ месяц</span></div>
+  <div class="tariff-desc">Максимальный уровень доступа и возможностей.</div>
+  <div class="tariff-features">
+    <span>✓ Всё из PRO</span><span>✓ 60 Charges</span>
+    <span>✓ Расширенная аналитика</span><span>✓ Все достижения</span>
+    <span>✓ Duels + Top 100</span><span>✓ Полный доступ</span>
+  </div>
+  <button class="plan-btn" onclick="chooseTariffDetail('ELITE')">Выбрать ELITE</button>
+</div>
+
+<div class="detail-card card tariff-payment">
+  <div class="eyebrow">ОПЛАТА</div>
+  <b>Telegram Stars</b>
+  <p>После успешной оплаты доступ активируется автоматически.</p>
+  <button class="big-action" onclick="toast('Переход к оплате')">Продолжить к оплате</button>
+</div>`
+},
+journal:{
+title:"Trade Journal",eyebrow:"JOURNAL",
+body:`<div class="detail-card card"><div class="eyebrow">Новая запись</div><h2>Записать сделку</h2><p>Результат, сумма, прибыль, эмоция и дата сохраняются в журнал.</p><input class="input" placeholder="Результат: WIN / LOSS"><input class="input" placeholder="Сумма"><input class="input" placeholder="Прибыль"><input class="input" placeholder="Эмоция"><button class="big-action">Сохранить сделку</button></div><div class="detail-card card"><div class="eyebrow">История</div><h2>Последние сделки</h2><p>Пока записей нет.</p></div>`
+},
+risk:{
+title:"Risk Manager",eyebrow:"RISK",
+body:`<div class="detail-card card"><div class="eyebrow">Калькулятор</div><h2>Рассчитать позицию</h2><input class="input" placeholder="Баланс"><input class="input" placeholder="Риск %"><input class="input" placeholder="Цена входа"><input class="input" placeholder="Stop Loss"><button class="big-action">Рассчитать</button></div><div class="detail-card card"><div class="eyebrow">Правило</div><p>Risk Manager помогает соблюдать заданный риск и не подменяет решение трейдера.</p></div>`
+},
+stats:{
+title:"Statistics",eyebrow:"ANALYTICS",
+body:`<div class="detail-card card"><div class="metrics"><div class="metric"><label>Сделки</label><b>0</b></div><div class="metric"><label>Win rate</label><b>—</b></div><div class="metric"><label>Плюс</label><b>0</b></div><div class="metric"><label>Минус</label><b>0</b></div></div></div><div class="detail-card card"><div class="eyebrow">Анализ</div><h2>Динамика</h2><p>Графики будут строиться по реальным данным Trade Journal.</p></div>`
+},
+psych:{
+title:"Psychology SOS",eyebrow:"SOS",
+body:`<div class="detail-card card"><div class="eyebrow">Сейчас</div><h2 class="glowtext">Остановись на минуту.</h2><p>Перед следующим решением оцени состояние, импульс и желание отыграться.</p><button class="big-action">Запустить SOS</button></div><div class="detail-card card"><div class="choice"><span>Я спокоен</span><span>○</span></div><div class="choice"><span>Я хочу отыграться</span><span>○</span></div><div class="choice"><span>Я нарушаю план</span><span>○</span></div></div>`
+},
+human:{
+title:"Human SOS",eyebrow:"HUMAN SUPPORT",
+body:`<div class="detail-card card"><div class="eyebrow">Личный контакт</div><h2>Нужен человек?</h2><p>Human SOS — отдельный канал обращения. Лимит: до 3 обращений в месяц.</p><button class="big-action">Создать обращение</button></div><div class="detail-card card"><div class="eyebrow">Лимит</div><h2>3 / 3</h2><p>Доступные обращения обновляются по правилам тарифа.</p></div>`
+},
+edi:{
+title:"EDI365",eyebrow:"365 DAYS",
+body:`<div class="detail-card card"><div class="eyebrow">Сегодня</div><h2 class="glowtext">День 01 / 365</h2><p>Подтверждение дня выполняется через сервер. XP, Score и достижения рассчитываются сервером.</p><button class="big-action">Подтвердить DAY 01</button></div><div class="detail-card card"><div class="eyebrow">EDI Score</div><h2>31</h2><p>Текущий показатель дисциплины.</p></div>`
+},
+academy:{
+title:"Academy",eyebrow:"LEARN",
+body:`<div class="detail-card card"><div class="eyebrow">Курс 01</div><h2>Основа дисциплины</h2><p>Уроки, задания и материалы открываются постепенно.</p><button class="big-action">Продолжить обучение</button></div><div class="detail-card card"><div class="choice"><span>01 · Основы риска</span><span>✓</span></div><div class="choice"><span>02 · Эмоции</span><span>Locked</span></div><div class="choice"><span>03 · Дисциплина</span><span>Locked</span></div></div>`
+},
+voices:{
+title:"156 Voices",eyebrow:"EDI365 VOICES",
+body:`<div class="detail-card card"><div class="eyebrow">12 месяцев · 13 голосов</div><h2>Голосовой путь</h2><p>156 сообщений открываются постепенно вместе с EDI365.</p></div><div class="detail-card card" id="voiceList"></div>`
+},
+ach:{
+title:"Achievements",eyebrow:"REWARDS",
+body:`<div class="detail-card card"><div class="eyebrow">Прогресс</div><h2>0 / 24 открыто</h2><p>Достижения выдаются сервером за реальные действия.</p></div><div class="detail-card card"><div class="choice"><span>Первый день</span><span>Locked</span></div><div class="choice"><span>7 дней подряд</span><span>Locked</span></div><div class="choice"><span>30 дней</span><span>Locked</span></div><div class="choice"><span>100 дней</span><span>Locked</span></div></div>`
+},
+top:{
+title:"Top 100",eyebrow:"RANKING",
+body:`<div class="detail-card card"><div class="eyebrow">GLOBAL RANKING</div><h2 class="glowtext">Hall of Fame</h2><p>Живой рейтинг всех участников EDI365. В Top 100 попадают первые сто пользователей по выбранному показателю.</p><div class="choice"><span>Участников</span><b>10 428</b></div><div class="choice"><span>В Top 100</span><b>100</b></div></div><div class="detail-card card"><div class="eyebrow">Твой рейтинг</div><h2>#347</h2><p>Текущая позиция пользователя рассчитывается сервером среди всех участников.</p></div>`
+},
+hall:{
+title:"Hall of Fame",eyebrow:"LEGENDS",
+body:`<div class="detail-card card"><div class="eyebrow">Лучшие</div><h2>Hall of Fame</h2><p>Пользователи, которые достигли выдающихся результатов и серий.</p></div><div class="detail-card card"><div class="choice"><span>🥇 Alex · 98 Score</span><span>365d</span></div><div class="choice"><span>🥈 Mark · 94 Score</span><span>240d</span></div><div class="choice"><span>🥉 David · 92 Score</span><span>180d</span></div></div>`
+},
+duels:{
+title:"Duels",eyebrow:"COMPETE",
+body:`<div class="detail-card card"><div class="eyebrow">Соревнования</div><h2>Создать дуэль</h2><p>Соревнуйся по заранее определённым правилам EdiBalance.</p><button class="big-action">Создать дуэль</button></div><div class="detail-card card"><div class="choice"><span>Активные дуэли</span><b>0</b></div><div class="choice"><span>Победы</span><b>0</b></div></div>`
+},
+live:{
+title:"LIVE",eyebrow:"COMMUNITY",
+body:`<div class="detail-card card"><div class="eyebrow">Real DB</div><h2 class="glowtext">EdiBalance LIVE</h2><p>Живые данные сообщества: активность, события и рейтинговые изменения.</p></div><div class="detail-card card"><div class="choice"><span>Активных пользователей</span><b>—</b></div><div class="choice"><span>Сегодня завершено</span><b>—</b></div></div>`
+},
+creator:{
+title:"Creator",eyebrow:"PARTNER",
+body:`<div class="detail-card card"><div class="eyebrow">Creator Program</div><h2>Партнёрская программа</h2><p>Отдельный creator-контур для партнёров и авторов.</p><button class="big-action">Открыть Creator</button></div><div class="detail-card card"><div class="choice"><span>Комиссия 1-й месяц</span><b>30%</b></div><div class="choice"><span>Следующие месяцы</span><b>10%</b></div></div>`
+},
+payments:{
+title:"Payments",eyebrow:"BILLING",
+body:`<div class="detail-card card"><div class="eyebrow">Текущий доступ</div><h2>START · 20 Charges</h2><p>Оплата через Telegram Stars. Успешная оплата автоматически активирует доступ.</p><button class="big-action">Изменить тариф</button></div><div class="detail-card card"><div class="eyebrow">История</div><p>Платежей пока нет.</p></div>`
+},
+paySupport:{
+title:"Payment Support",eyebrow:"SUPPORT",
+body:`<div class="detail-card card"><div class="eyebrow">Помощь с оплатой</div><h2>Что случилось?</h2><div class="support-option"><b>Оплата не пришла</b><small>Проверить платеж и статус доступа</small></div><div class="support-option"><b>Заплатил, но доступ не активирован</b><small>Создать обращение</small></div><div class="support-option"><b>Запросить возврат</b><small>Отдельная процедура возврата</small></div><div class="support-option"><b>Отменить подписку</b><small>Остановить дальнейшее продление</small></div></div>`
+},
+documents:{
+title:"Documents",eyebrow:"LEGAL",
+body:`<div class="detail-card card"><div class="choice"><span>Условия использования</span><span>PDF ›</span></div><div class="choice"><span>Политика конфиденциальности</span><span>PDF ›</span></div><div class="choice"><span>Согласие на обработку данных</span><span>PDF ›</span></div><div class="choice"><span>Платежи и тарифы</span><span>PDF ›</span></div><div class="choice"><span>Мне исполнилось 18 лет</span><span>✓</span></div></div>`
+},
+support:{
+title:"Поддержка",eyebrow:"HELP",
+body:`<div class="detail-card card"><div class="eyebrow">EdiBalance Support</div><h2>Чем помочь?</h2><p>Выбери тему или отправь сообщение команде поддержки.</p><div class="support-option"><b>Техническая проблема</b></div><div class="support-option"><b>Доступ и тариф</b></div><div class="support-option"><b>Платёж</b></div><div class="support-option"><b>Другое</b></div><button class="big-action">Написать в поддержку</button></div>`
+},
+language:{
+title:"Язык",eyebrow:"LANGUAGE",
+body:`<div class="detail-card card"><div class="choice"><span>Русский</span><b>✓</b></div><div class="choice"><span>Azərbaycan</span><span>›</span></div><div class="choice"><span>English</span><span>›</span></div></div>`
+},
+notifications:{
+title:"Уведомления",eyebrow:"NOTIFICATIONS",
+body:`<div class="detail-card card"><div class="choice"><span>EDI365</span><div class="toggle on"><i></i></div></div><div class="choice"><span>Напоминания</span><div class="toggle on"><i></i></div></div><div class="choice"><span>Достижения</span><div class="toggle"><i></i></div></div><div class="choice"><span>Рейтинг</span><div class="toggle"><i></i></div></div></div>`
+},
+security:{
+title:"Безопасность",eyebrow:"SECURITY",
+body:`<div class="detail-card card"><div class="choice"><span>Telegram-сессия</span><b>Защищена</b></div><div class="choice"><span>WebApp initData</span><b>Verified</b></div><div class="choice"><span>Последняя активность</span><b>Сейчас</b></div></div><div class="detail-card card"><div class="eyebrow">Важно</div><p>Секретные ключи и токены не должны находиться в клиентском Mini App.</p></div>`
+},
+about:{
+title:"О EdiBalance",eyebrow:"ABOUT",
+body:`<div class="detail-card card"><div class="eyebrow">EDIBALANCE</div><h2 class="glowtext">Discipline over emotion.</h2><p>Версия Mini App · Premium UI Concept</p></div><div class="detail-card card"><div class="choice"><span>Условия</span><span>›</span></div><div class="choice"><span>Privacy</span><span>›</span></div><div class="choice"><span>Версия</span><span>3.x</span></div></div>`
+},
+logout:{
+title:"Выход из аккаунта",eyebrow:"ACCOUNT",
+body:`<div class="detail-card card"><div class="eyebrow">Завершение сессии</div><h2>Выйти из EdiBalance?</h2><p>Текущая сессия будет завершена. Данные аккаунта не удаляются.</p><button class="big-action">Выйти из аккаунта</button></div>`
+}
+};
+
+function openDetail(key){
+  const d=detailData[key]; if(!d)return;
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  const el=document.getElementById('details');
+  el.classList.add('open');
+  el.innerHTML=`<section class="detail-screen active"><div class="backbar"><button class="backbtn" onclick="closeDetail()">‹ Назад</button><span class="backtitle">${d.eyebrow}</span></div><h1 class="title glowtext">${d.title}</h1>${d.body}</section>`;
+  if(key==='voices'){
+    const list=document.getElementById('voiceList');
+    list.innerHTML='<div class="eyebrow">Первые сообщения</div>'+Array.from({length:8},(_,i)=>`<div class="voice-row"><span class="vnum">${String(i+1).padStart(2,'0')}</span><div class="vplay">${i===0?'▶':'🔒'}</div><div><b>Голос ${i+1}</b><small>EDI365 · 04:00</small></div><span class="locked">${i===0?'OPEN':'LOCKED'}</span></div>`).join('');
+  }
+  scrollTo({top:0,behavior:'smooth'});
+}
+function closeDetail(){
+  const el=document.getElementById('details');
+  el.classList.remove('open');
+  el.innerHTML='';
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+
+<style>
+.tariff-top{padding:22px 20px}
+.tariff-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tariff-subtitle{font-size:25px;font-weight:800;letter-spacing:-.8px;margin-top:7px}
+.tariff-card{padding:24px 20px;border-radius:30px}
+.tariff-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tariff-name{font-size:18px;letter-spacing:4px;font-weight:850}
+.tariff-price{font-size:48px;line-height:1.05;font-weight:900;letter-spacing:-2px;margin-top:10px}
+.tariff-price span{font-size:15px;color:#999;font-weight:600;letter-spacing:0}
+.tariff-desc{font-size:15px;color:#999;margin:25px 0 20px;line-height:1.45}
+.tariff-features{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;font-size:14px;color:#555;line-height:1.55}
+.tariff-card .plan-btn{margin-top:23px;height:64px;border-radius:24px}
+.tariff-pro{border:1.5px solid #aab3ff!important;box-shadow:0 12px 38px rgba(103,112,240,.13);position:relative;overflow:hidden}
+.tariff-pro .popular{position:static;text-align:right;margin-bottom:7px;font-size:11px;letter-spacing:2px;color:#6874dc;font-weight:900}
+.tariff-pro .pro-underline{position:absolute;top:58px;left:40px;width:76px;height:6px;border-radius:10px;background:linear-gradient(90deg,#6677ff,transparent);box-shadow:0 0 16px rgba(102,119,255,.45)}
+.tariff-pro .promo{display:flex;justify-content:space-between;align-items:center;background:#f0effb;border-radius:22px;padding:15px 18px;margin:0 0 20px;font-size:13px}
+.tariff-pro .promo b{color:#6672df}.tariff-pro .promo span{color:#999}
+.tariff-payment{padding:18px 20px}
+.tariff-payment b{display:block;font-size:15px;margin-top:7px}
+.tariff-payment p{font-size:11px!important;margin:5px 0 12px!important}
+@media(max-width:430px){.tariff-price{font-size:45px}.tariff-subtitle{font-size:23px}}
+</style>
+
+<script>
+window.tariffCurrency=function(c,b){
+  const w=b.parentElement;
+  w.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  if(typeof toast==='function') toast(c==='USD'?'USD выбран':'Telegram Stars выбран');
+};
+window.chooseTariffDetail=function(plan){
+  document.querySelectorAll('.tariff-card').forEach(x=>x.classList.remove('selected'));
+  const cards=document.querySelectorAll('.tariff-card');
+  const idx={START:0,PRO:1,ELITE:2}[plan];
+  if(cards[idx]) cards[idx].classList.add('selected');
+  if(typeof toast==='function') toast(plan+' выбран');
+};
+</script>
+<style>.tariff-card.selected{box-shadow:0 16px 42px rgba(91,104,225,.16);border-color:#aab3ff!important;transform:translateY(-2px)}</style>
+
+<script>
+/* EdiBalance v9.1 interaction reliability layer — visual design unchanged */
+(function(){
+  function safe(fn){
+    try { fn(); } catch(e) {
+      console.error('EdiBalance interaction:', e);
+      if (typeof toast === 'function') toast('Раздел загружается…');
+    }
+  }
+
+  // Make every element with onclick resilient to accidental event propagation.
+  document.addEventListener('click', function(e){
+    const el = e.target.closest('button,[role="button"],a');
+    if(!el) return;
+    // Do not interfere with links or buttons that already have explicit handlers.
+    // The handler exists mainly to ensure dynamically-rendered buttons remain usable.
+    if (el.disabled) e.preventDefault();
+  }, true);
+
+  // Re-bind after each render, if the original preview exposes render/show.
+  const originalShow = window.show;
+  if (typeof originalShow === 'function') {
+    window.show = function(key){
+      return safe(function(){ originalShow(key); });
+    };
+  }
+
+  const originalOpenDetail = window.openDetail;
+  if (typeof originalOpenDetail === 'function') {
+    window.openDetail = function(key){
+      return safe(function(){ originalOpenDetail(key); });
+    };
+  }
+
+  // Ensure the fixed detail layer can always be closed.
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      const d=document.getElementById('details');
+      if(d) d.classList.remove('open');
+    }
+  });
+
+  // If a details screen contains a back button, make it reliably return.
+  document.addEventListener('click', function(e){
+    const b=e.target.closest('[data-back],.back-btn,.details-back');
+    if(!b) return;
+    e.preventDefault();
+    safe(function(){
+      const d=document.getElementById('details');
+      if(d) d.classList.remove('open');
+      if(typeof show==='function') show('home');
+    });
+  });
+
+  // Telegram WebApp preview fallback: v9 remains fully usable in a normal browser.
+  if(!window.Telegram || !window.Telegram.WebApp){
+    window.__EDI_PREVIEW__=true;
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  window.__ediTariff = window.__ediTariff || {plan:'PRO',currency:'USD'};
+  window.setCurrency=function(currency,btn){
+    window.__ediTariff.currency=currency;
+    const wrap=btn.closest('.stars-toggle');
+    if(wrap) wrap.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    if(typeof toast==='function') toast(currency==='USD'?'USD выбран':'Telegram Stars выбран');
+  };
+  window.selectTariff=function(plan){
+    window.__ediTariff.plan=plan;
+    document.querySelectorAll('.plan-card').forEach(x=>x.classList.remove('selected'));
+    const cards=document.querySelectorAll('.plan-card');
+    const map={START:0,PRO:1,ELITE:2};
+    if(cards[map[plan]]) cards[map[plan]].classList.add('selected');
+    if(typeof toast==='function') toast(plan+' выбран');
+  };
+})();
+</script>
+<style>
+.plan-card.selected{transform:translateY(-2px);box-shadow:0 16px 42px rgba(91,104,225,.16);border-color:#aab3ff}
+</style>
+
+<script>
+/* v9.5: activate every remaining demo control without changing v9 visuals */
+(function(){
+ document.addEventListener('click',function(e){
+   const b=e.target.closest('button');
+   if(!b || b.disabled) return;
+   if(b.getAttribute('onclick')) return;
+   const t=(b.textContent||'').trim();
+   if(t.includes('Сохранить сделку')) return toast('Демо: сделка сохранена ✓');
+   if(t.includes('Рассчитать')) return toast('Демо: расчёт выполнен ✓');
+   if(t.includes('Запустить SOS')) return toast('Psychology SOS запущен');
+   if(t.includes('Создать обращение')) return toast('Human SOS: обращение создано ✓');
+   if(t.includes('Подтвердить DAY')) return toast('DAY COMPLETED ✓ • XP начислен');
+   if(t.includes('Продолжить обучение')) return toast('Урок открыт ✓');
+   if(t.includes('Продолжить к оплате')) return toast('Открыта оплата в Telegram Stars');
+   if(t.includes('Выйти из аккаунта')) return toast('Демо: выход выполнен');
+   if(t==='USD'||t==='★') return;
+   toast(t ? t+' — открыто' : 'Открыто');
+ });
+ document.addEventListener('click',function(e){
+   const row=e.target.closest('.choice');
+   if(row && !e.target.closest('button')) toast((row.textContent||'Раздел') .trim()+' — открыто');
+ });
+})();
+</script>
+\n<script>/* v9.11: Top 100 visual ranking — v9.10 style matched to the reference. */
+(function(){
+  const total=10428;
+  const seed=[
+    ['Alex',98,15320,120],['Mark',94,12480,72],['David',92,11950,68],
+    ['Sergei',90,11420,56],['Elena',88,10980,54],['Ruslan',87,10540,49],['Anastasia',85,10120,47],
+    ['Timur',83,9860,44],['Karina',82,9420,42],['Islam',80,9010,40],['Nikita',79,8760,38],['Victoria',78,8420,36],
+    ['Denis',77,8150,34],['Lika',76,7980,32],['Arsen',75,7640,30]
+  ];
+  const names=['Maksim','Daniil','Roman','Samir','Amir','Tural','Elvin','Murad','Rauf','Farid','Kamran','Said','Rashad','Nurlan','Ilkin','Orkhan','Anar','Ali','Yusuf','Ayan'];
+  const users=Array.from({length:total},(_,i)=>{
+    if(i<seed.length){const x=seed[i];return {id:i+1,name:x[0],score:x[1],xp:x[2],streak:x[3],initial:x[0][0]};}
+    const score=Math.max(38,74-Math.floor((i-seed.length)*0.018)-(i%9===0?1:0));
+    const xp=Math.max(620,7600-Math.floor((i-seed.length)*0.72));
+    const streak=Math.max(1,29-Math.floor((i-seed.length)*0.002)-(i%7===0?1:0));
+    const name=names[(i-seed.length)%names.length]+' '+(Math.floor((i-seed.length)/names.length)+2);
+    return {id:i+1,name,score,xp,streak,initial:name[0]};
+  });
+  const me={name:'Edgar',score:71,xp:6420,streak:12};
+  function sorted(){return users.slice().sort((a,b)=>b.score-a.score||b.xp-a.xp||a.id-b.id)}
+  function podiumCard(u,rank){
+    const cls=rank===1?'first':rank===2?'second':'third';
+    const crown=rank===1?'♛':rank===2?'♛':'♛';
+    return `<div class="pod-card ${cls}"><div class="crown">${crown}</div><div class="pod-num">${rank}</div><div class="pod-avatar">${u.initial}</div><div class="pod-name">${u.name}</div><div class="pod-score"><span>★</span>${u.score}</div><div class="pod-meta">XP ${u.xp.toLocaleString('en-US')}</div><div class="pod-meta">🔥 ${u.streak} дней</div></div>`;
+  }
+  function render(){
+    const top=sorted().slice(0,100);
+    const pod=document.getElementById('rankingPodium');
+    const rows=document.getElementById('rankingList');
+    if(!pod||!rows)return;
+    pod.innerHTML=podiumCard(top[1],2)+podiumCard(top[0],1)+podiumCard(top[2],3);
+    rows.innerHTML=top.slice(3).map((u,idx)=>{const rank=idx+4;return `<div class="ranking-row"><span class="rank">${rank}</span><div class="rank-user"><div class="rank-avatar small">${u.initial}</div><b>${u.name}</b></div><span class="score-pill">${u.score}</span><span class="rank-xp">${u.xp.toLocaleString('en-US')}</span><span class="rank-streak">🔥 ${u.streak} дней</span></div>`}).join('');
+    const count=document.getElementById('rankingCount'); if(count)count.textContent=total.toLocaleString('ru-RU');
+    const mr=document.getElementById('myRankMeta'); if(mr)mr.textContent='#347';
+    const mv=document.getElementById('myRankValue'); if(mv)mv.textContent=me.score;
+  }
+  window.renderFullRanking=render;
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
+})();</script>\n
+<style>
+.rank-topline{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;margin:-8px 0 22px}.rank-topline>span{font-size:11px;color:#aaa;letter-spacing:.7px}.rank-back{border:1px solid var(--line);background:#fff;border-radius:18px;padding:11px 14px;color:#666;font:inherit;font-size:11px;box-shadow:0 7px 20px rgba(0,0,0,.04)}.rank-select{border:1px solid #e4e4df;background:#fff;border-radius:25px;padding:12px 15px;font:inherit;font-size:11px;min-width:145px;text-align:left;box-shadow:0 7px 22px rgba(0,0,0,.04)}.rank-select b{float:right;color:#777;font-size:15px;line-height:10px}.rank-summary{padding:17px 18px;display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:20px}.rank-summary-item{display:flex;align-items:center;gap:10px;min-width:0}.rank-summary-item .eyebrow{font-size:8px;letter-spacing:1.5px;margin-bottom:4px}.rank-summary-item strong{font-size:27px;letter-spacing:-1px}.summary-icon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:20px}.summary-icon.people{background:#f0f1ff;color:#5d6cff}.summary-icon.cup{background:#fff7df;color:#eab63c}.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#39d978;box-shadow:0 0 0 3px rgba(57,217,120,.10);vertical-align:middle;margin-right:5px}.live-text{font-size:10px;color:#777;vertical-align:middle}.podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:9px;align-items:end;margin:0 0 18px}.pod-card{background:#fff;border:1px solid #e6e6e1;border-radius:25px;padding:16px 8px 15px;text-align:center;position:relative;min-height:248px;box-shadow:0 13px 36px rgba(20,20,18,.045)}.pod-card.first{min-height:270px;background:linear-gradient(145deg,#fffdf2,#fff);border-color:#f0dc9d;box-shadow:0 18px 45px rgba(231,184,57,.12)}.pod-card.second{background:linear-gradient(145deg,#f8f9ff,#fff);border-color:#dce2ff}.pod-card.third{background:linear-gradient(145deg,#fff8f5,#fff);border-color:#f0ddd6}.crown{font-size:28px;line-height:1;margin:-5px 0 4px}.pod-num{font-size:10px;color:#999;font-weight:800;margin-bottom:8px}.pod-avatar{width:60px;height:60px;border-radius:50%;margin:0 auto 9px;display:grid;place-items:center;font-size:18px;font-weight:800;background:#dededc}.first .pod-avatar{background:#626bff;color:#fff}.pod-name{font-size:12px;font-weight:800}.pod-score{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:7px 12px;border-radius:18px;background:#f0efff;color:#121212;font-size:16px;font-weight:800}.pod-score span{color:#626bff;font-size:14px}.pod-meta{font-size:10px;color:#999;margin-top:7px}.ranking-table{overflow:hidden;padding:0}.ranking-head{display:grid;grid-template-columns:28px 1.55fr .85fr .72fr .82fr;gap:6px;align-items:center;padding:13px 12px 11px;border-bottom:1px solid var(--line);color:#999;font-size:8px;font-weight:750;letter-spacing:.5px}.ranking-row{display:grid;grid-template-columns:28px 1.55fr .85fr .72fr .82fr;gap:6px;align-items:center;padding:10px 12px;border-bottom:1px solid #ededE8}.ranking-row:last-child{border-bottom:0}.ranking-row .rank{width:auto;color:#111;font-size:11px;font-weight:650}.rank-user{display:flex;align-items:center;gap:8px;min-width:0}.rank-user .rank-avatar.small{width:36px;height:36px;flex:0 0 36px}.rank-user b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.score-pill{display:inline-flex;align-items:center;gap:4px;background:#efefff;color:#111;border-radius:15px;padding:5px 8px;font-size:11px;font-weight:750}.score-pill:before{content:'★';color:#626bff;font-size:10px}.rank-xp,.rank-streak{font-size:10px;color:#888;white-space:nowrap}.rank-streak{color:#666}.my-rank{margin-top:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;position:sticky;bottom:92px;z-index:5}.my-rank-place{background:#f0efff;border-radius:16px;padding:9px 11px;min-width:92px}.my-rank-place span{display:block;color:#626bff;font-size:8px;font-weight:700}.my-rank-place strong{display:block;font-size:25px;letter-spacing:-1px;color:#27327a}.my-avatar{width:42px;height:42px;flex:0 0 42px;background:#dce9ff;color:#3558b6}.my-rank-info{min-width:0}.my-rank-info b{font-size:12px}.my-rank-info em{font-style:normal;color:#626bff;background:#efefff;border-radius:10px;padding:3px 6px;font-size:8px;margin-left:4px}.my-rank-info .score-pill{display:flex;width:max-content;margin-top:5px}.my-rank-extra{margin-left:auto;display:flex;flex-direction:column;gap:7px;align-items:flex-end;color:#888;font-size:9px;white-space:nowrap}.ranking-row .score-pill{justify-self:start}@media(max-width:390px){.rank-summary-item strong{font-size:23px}.rank-select{min-width:128px}.ranking-head,.ranking-row{grid-template-columns:24px 1.45fr .8fr .7fr .8fr;padding-left:9px;padding-right:9px}.pod-card{min-height:232px}.pod-card.first{min-height:250px}.my-rank-extra{font-size:8px}}
+</style>
+</body></html>
